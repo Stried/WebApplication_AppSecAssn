@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebApplication3.ViewModels;
 using NanoidDotNet;
 using WebApplication3.Model;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace WebApplication3.Pages
 {
@@ -14,6 +16,8 @@ namespace WebApplication3.Pages
         private SignInManager<User> signInManager { get; }
         private readonly AuthDbContext authDbContext;
         private readonly ILogger<RegisterModel> logger;
+        private static string salt;
+        private static string finalHash;
 
 
         [BindProperty]
@@ -43,6 +47,20 @@ namespace WebApplication3.Pages
             {
                 // https://learn.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-7.0
                 byte[] photoBytes = null;
+                byte[] saltByte = new byte[8];
+
+                RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+                rng.GetBytes(saltByte);
+                salt = Convert.ToBase64String(saltByte);
+
+                SHA512Managed hashing = new SHA512Managed();
+
+                string pwdWithSalt = RModel.Password + salt;
+                byte[] plainHash = hashing.ComputeHash(Encoding.UTF8.GetBytes(RModel.Password));
+                byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
+
+                finalHash = Convert.ToBase64String(hashWithSalt);
+
                 using (MemoryStream photoStream = new MemoryStream())
                 {
                     await RModel.PhotoString.CopyToAsync(photoStream);
@@ -61,7 +79,7 @@ namespace WebApplication3.Pages
                     Email = RModel.Email,
                     PhotoString = photoBytes,
                     AboutMe = RModel.AboutMe,
-                    Password = RModel.Password,
+                    Password = finalHash,
 
                 };
                 var result = await userManager.CreateAsync(user, RModel.Password);
@@ -70,9 +88,9 @@ namespace WebApplication3.Pages
 
                 if (result.Succeeded)
                 {
-                    await signInManager.SignInAsync(user, false);
+                    // await signInManager.SignInAsync(user, false);
 
-                    return RedirectToPage("Index");
+                    return RedirectToPage("Login");
                 }
                 foreach (var error in result.Errors)
                 {

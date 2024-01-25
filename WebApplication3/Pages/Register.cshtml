@@ -1,0 +1,200 @@
+﻿@page
+@model WebApplication3.Pages.RegisterModel
+@{
+}
+
+<script type="text/javascript">
+    function validateFullName() {
+        var inputStr = document.getElementById("RModel.FullName").value;
+        var errorLine = document.getElementById("fullNameError");
+        errorLine.style.color = "red";
+
+        if (inputStr.trim().length == 0) {
+            errorLine.innerText = "Full name cannot be empty";
+        } else if (inputStr.trim().length < 8) {
+            errorLine.innerText = "Full name cannot be less than 8 letters";
+        } else if (!(/^[a-zA-Z ]+$/.test(inputStr))) {
+            errorLine.innerText = "Full name cannot contain special characters";
+        } else {
+            errorLine.innerText = "";
+        }
+    }
+
+    function validateCreditCard() {
+        var inputStr = document.getElementById("RModel.CreditCardNo").value;
+        var errorLine = document.getElementById("creditCardError")
+        errorLine.style.color = "red"
+
+        if (inputStr.length == 0) {
+            errorLine.innerText = "Credit card number cannot be empty"
+        } else if (inputStr.length != 16) {
+            errorLine.innerText = "Credit card number must be 16 digits long"
+        } else if (!(/^[0-9]+$/.test(inputStr))) {
+            errorLine.innerText = "Credit card can only contain numbers"
+        } else {
+            errorLine.innerText = ""
+        }
+    }
+
+    function validateEmailAddress() {
+        var inputStr = document.getElementById("RModel.EmailAddress").value;
+        var errorLine = document.getElementById("emailError");
+        errorLine.style.color = "red";
+
+        if (inputStr.length == 0) {
+            errorLine.innerText = "Email Address cannot be empty";
+        } else if (!(/^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(inputStr))) {
+            errorLine.innerText = "Enter a valid email address";
+        } else {
+            errorLine.innerText = "";
+        }
+    }
+
+    function validatePhoneNo() {
+        var inputStr = document.getElementById("RModle.PhoneNo").value;
+        var errorLine = document.getElementById("phoneNoError");
+        errorLine.style.color = "red";
+
+        if (inputStr.length == 0) {
+            errorLine.innerText = "Phone Number cannot be empty"
+        } else if (inputStr.length != 8) {
+            errorLine.innerText = "Phone Number must be 8 digits long"
+        } else if (!(/^[0-9]+$/.test(inputStr))) {
+            errorLine.innerText = "Phone Number can only contain numbers"
+        } else {
+            errorLine.innerText = ""
+        }
+    }
+
+    function validatePassword() {
+        var inputStr = document.getElementById("RModel.Password").value;
+        var errorLine = document.getElementById("passwordError");
+        errorLine.style.color = "red";
+
+        if (inputStr.length == 0) {
+            errorLine.innerText = "Password cannot be empty"
+        } else if (inputStr.length < 8) {
+            errorLine.innerText = "Password length cannot be less than 8"
+        } else if (!(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@@$!%*#?&])[A-Za-z\d@@$!%*#?&]{8,}$/).test(inputStr))) {
+            errorLine.innerText = "Password must contain at least one letter, one number and one special character"
+        } else {
+            errorLine.innerText = ""
+        }
+    }
+
+    function checkPassword() {
+        var inputStr = document.getElementById("RModel.ConfirmPassword").value;
+        var errorLine = document.getElementById("cnfmPasswordError");
+
+        var passwordCheck = document.getElementById("password").value;
+
+        if (inputStr != passwordCheck) {
+            errorLine.innerText = "Passwords do not match"
+        } else {
+            errorLine.innerText = ""
+        }
+    }
+
+</script>
+
+<style>
+    .formFieldItem {
+        margin-top: 12px;
+        margin-bottom: 12px;
+    }
+</style>
+
+<div class="container mt-5">
+
+	<div class="row justify-content-center align-items-center">
+
+		<div class="col-sm-12 col-md-12 col-lg-4">
+			<h1 class="mb-3">Register </h1>
+
+			<form method="post" enctype="multipart/form-data">
+				<div asp-validation-summary="All" class="text-danger"></div>
+
+				<div class="formFieldItem">
+					<label class="form-label" asp-for="RModel.FullName" for="fullName">
+						Full Name
+					</label>
+                    <input type="text" asp-for="RModel.FullName" class="form-control" name="RModel.FullName" id="RModel.FullName" onkeyup="validateFullName()">
+					<p id="fullNameError"></p>
+				</div>
+
+                <div class="formFieldItem">
+                    <label asp-for="RModel.CreditCardNo" for="creditCardNo">
+                        Credit Card Number
+                    </label>
+                    <input type="number" asp-for="RModel.CreditCardNo" class="form-control" name="RModel.CreditCardNo" id="RModel.CreditCardNo" onkeyup="validateCreditCard()">
+                    <p id="creditCardError"></p>
+                </div>
+
+                <div class="formFieldItem">
+                    <label asp-for="RModel.DeliveryAddress" for="deliveryAddress">
+                        Delivery Address
+                    </label>
+                    <input type="text" asp-for="RModel.DeliveryAddress" class="form-control" name="RModel.DeliveryAddress" id="RModel.DeliveryAddress">
+                    <p id="deliveryAddressError"></p>
+                </div>
+
+                <div class="formFieldItem">
+                    <label asp-for="RModel.Gender" for="">
+                        Gender
+                    </label>
+                    <input type="text" asp-for="RModel.Gender" name="RModel.Gender" id="RModel.Gender">
+
+                    <p id="genderError"></p>
+                </div>
+
+                <div class="formFieldItem">
+                    <label asp-for="RModel.Email" for="emailAddress">
+                        Email Address
+                    </label>
+                    <input type="email" asp-for="RModel.Email" class="form-control" name="RModel.Email" id="RModel.Email" onkeyup="validateEmailAddress()">
+                    <p id="emailError"></p>
+                </div>
+
+                <div class="formFieldItem">
+                    <label asp-for="RModel.PhoneNumber" for="phoneNo">
+                        Phone Number
+                    </label>
+                    <input type="number" asp-for="RModel.PhoneNumber" class="form-control" name="RModel.PhoneNo" id="RModel.PhoneNo" onkeyup="validatePhoneNo()">
+                    <p id="phoneNoError"></p>
+                </div>
+
+                <div class="formFieldItem">
+                    <label asp-for="RModel.PhotoString" for="profileImage">
+                        Profile Image
+                    </label>
+                    <input type="file" name="RModel.PhotoString" id="RModel.PhotoString" class="form-control">
+                    <p id="pfpError"></p>
+                </div>
+
+                <div class="formFieldItem">
+                    <label asp-for="RModel.AboutMe" for="aboutMe">
+                        About Me
+                    </label>
+                    <input type="text" asp-for="RModel.AboutMe" name="RModel.AboutMe" id="RModel.AboutMe" class="form-control">
+                    <p id="aboutMeError"></p>
+                </div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.Password">Password</label>
+					<input type="Text" asp-for="RModel.Password" class="form-control" id="RModel.Password" onkeyup="validatePassword()" />
+					<span id="passwordError" asp-validaton-for="RModel.Password" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="RModel.ConfirmPassword">Confirm Password</label>
+					<input type="Text" asp-for="RModel.ConfirmPassword" class="form-control" id="RModel.ConfirmPassword" onkeyup="checkPassword()" />
+					<span id="cnfmPasswordError" asp-validaton-for="RModel.ConfirmPassword" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<button type="submit" class="btn btn-primary">Register</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

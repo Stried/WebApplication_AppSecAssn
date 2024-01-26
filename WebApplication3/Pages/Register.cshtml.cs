@@ -61,6 +61,7 @@ namespace WebApplication3.Pages
 
                 finalHash = Convert.ToBase64String(hashWithSalt);
 
+
                 using (MemoryStream photoStream = new MemoryStream())
                 {
                     await RModel.PhotoString.CopyToAsync(photoStream);
@@ -80,6 +81,7 @@ namespace WebApplication3.Pages
                     PhotoString = photoBytes,
                     AboutMe = RModel.AboutMe,
                     Password = finalHash,
+                    SaltyBites = salt,
 
                 };
                 var result = await userManager.CreateAsync(user, RModel.Password);

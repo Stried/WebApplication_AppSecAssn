@@ -10,7 +10,21 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<AuthDbContext>(
     options => options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=AspNetAuth;Integrated Security=True;")
     );
-builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>();
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+{
+	// Password Settings
+	options.Password.RequireDigit = true;
+	options.Password.RequireLowercase = true;
+	options.Password.RequireUppercase = true;
+	options.Password.RequireNonAlphanumeric = true;
+	options.Password.RequiredLength = 12;
+	options.Password.RequiredUniqueChars = 1;
+
+	// Account Lockout
+	options.Lockout.AllowedForNewUsers = true;
+	options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+	options.Lockout.MaxFailedAccessAttempts = 3;
+}).AddEntityFrameworkStores<AuthDbContext>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -21,6 +35,16 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 12;
     options.Password.RequiredUniqueChars = 1;
+
+    // Account Lockout
+    options.Lockout.AllowedForNewUsers = true;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+    options.Lockout.MaxFailedAccessAttempts = 3;
+});
+
+builder.Services.ConfigureApplicationCookie(Config =>
+{
+    Config.LoginPath = "/Login";
 });
 
 var app = builder.Build();

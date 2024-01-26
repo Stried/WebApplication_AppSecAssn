@@ -23,5 +23,7 @@ namespace WebApplication3.ViewModels
         public string AboutMe { get; set; } = string.Empty;
 
         public string Password { get; set; } = string.Empty;
+
+        public string SaltyBites {  get; set; } = string.Empty;
     }
 }

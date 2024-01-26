@@ -8,13 +8,29 @@
     var protector = dataProtectionProvider.CreateProtector("MySecretKey");
 
     var sessionItem = context.HttpContext.Session;
-
+    var credCardDetails = "";
+    var aboutMe = "";
     var creditCardNo = context.HttpContext.Session.GetString("CreditCardNo");
-    var credCardDetails = protector.Unprotect(creditCardNo);
 
-        https://learn.microsoft.com/en-us/dotnet/api/system.web.httputility.htmlencode?view=net-8.0
-    StringWriter myWriter = new StringWriter();
-    var aboutMe = HttpUtility.HtmlDecode(sessionItem.GetString("AboutMe"));
+    if (creditCardNo != null)
+    {
+        credCardDetails = protector.Unprotect(creditCardNo);
+
+    https://learn.microsoft.com/en-us/dotnet/api/system.web.httputility.htmlencode?view=net-8.0
+        StringWriter myWriter = new StringWriter();
+        aboutMe = HttpUtility.HtmlDecode(sessionItem.GetString("AboutMe"));
+    } 
+    else
+    {
+        await SignInManager.SignOutAsync();
+        sessionItem.Clear();
+        ReturnToLogin();
+    }
+
+    IActionResult ReturnToLogin()
+    {
+        return RedirectToPage("Login");
+    }
 }
 
 @using Microsoft.AspNetCore.Identity

@@ -10,6 +10,7 @@ using WebApplication3.ViewModels;
 
 namespace WebApplication3.Pages
 {
+    [ValidateAntiForgeryToken]
     public class LoginModel : PageModel
     {
         [BindProperty]
@@ -55,6 +56,9 @@ namespace WebApplication3.Pages
                     _authDbContext.SaveChanges();
 
                     var userDetails = await _userManager.FindByNameAsync(LModel.Email);
+                    userDetails.SecurityStamp = Guid.NewGuid().ToString();
+                    await _userManager.UpdateAsync(userDetails);
+
                     _contextAccessor.HttpContext.Session.SetString("FullName", userDetails.FullName);
                     _contextAccessor.HttpContext.Session.SetString("CreditCardNo", userDetails.CreditCardNo.ToString());
 					_contextAccessor.HttpContext.Session.SetString("Gender", userDetails.Gender);
@@ -63,6 +67,9 @@ namespace WebApplication3.Pages
                     _contextAccessor.HttpContext.Session.SetString("Email", userDetails.Email);
                     _contextAccessor.HttpContext.Session.SetString("PhotoString", userDetails.PhotoString.ToString());
                     _contextAccessor.HttpContext.Session.SetString("AboutMe", userDetails.AboutMe);
+                    _contextAccessor.HttpContext.Session.SetString("SecurityStamp", userDetails.SecurityStamp);
+
+                    
 
                     return RedirectToPage("Index");
 				}

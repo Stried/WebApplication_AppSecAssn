@@ -57,8 +57,8 @@
 
         if (inputStr.length == 0) {
             errorLine.innerText = "Phone Number cannot be empty"
-        } else if (inputStr.length != 8) {
-            errorLine.innerText = "Phone Number must be 8 digits long"
+        } else if (inputStr.length < 12) {
+            errorLine.innerText = "Phone Number must be 12 digits long"
         } else if (!(/^[0-9]+$/.test(inputStr))) {
             errorLine.innerText = "Phone Number can only contain numbers"
         } else {
@@ -75,7 +75,8 @@
             errorLine.innerText = "Password cannot be empty"
         } else if (inputStr.length < 8) {
             errorLine.innerText = "Password length cannot be less than 8"
-        } else if (!(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@@$!%*#?&])[A-Za-z\d@@$!%*#?&]{8,}$/).test(inputStr))) {
+            console.log("An Error has occured")
+        } else if (!(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@@$!%*#?&])[A-Za-z\d@@$!%*#?&]{8,}$/).test(inputStr)) {
             errorLine.innerText = "Password must contain at least one letter, one number and one special character"
         } else {
             errorLine.innerText = ""
@@ -181,7 +182,7 @@
 
 				<div class="mb-3">
 					<label class="form-label" asp-for="RModel.Password">Password</label>
-					<input type="Text" asp-for="RModel.Password" class="form-control" id="RModel.Password" onkeyup="validatePassword()" />
+					<input type="Text" asp-for="RModel.Password" class="form-control" id="RModel.Password" onkeyup="javascript:validatePassword()" />
 					<span id="passwordError" asp-validaton-for="RModel.Password" class="text-danger"></span>
 				</div>
 

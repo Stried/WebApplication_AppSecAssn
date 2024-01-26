@@ -31,8 +31,9 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDistributedMemoryCache(); //save session in memory
 builder.Services.AddSession(options =>
 {
-	options.IdleTimeout = TimeSpan.FromSeconds(30);
+	options.IdleTimeout = TimeSpan.FromSeconds(120);
 });
+
 builder.Services.AddDataProtection().SetApplicationName("WebApplication3");
 builder.Services.AddDataProtection().SetDefaultKeyLifetime(TimeSpan.FromDays(14));
 builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(@"c:\temp-keys\"));
@@ -40,6 +41,7 @@ builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(@
 builder.Services.ConfigureApplicationCookie(Config =>
 {
     Config.LoginPath = "/Login";
+	Config.AccessDeniedPath = "/Index";
 });
 
 var app = builder.Build();

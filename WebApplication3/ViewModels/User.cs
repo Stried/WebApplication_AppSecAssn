@@ -24,6 +24,8 @@ namespace WebApplication3.ViewModels
 
         public string Password { get; set; } = string.Empty;
 
+        public string SecurityStamp {  get; set; } = string.Empty;
+
         public string SaltyBites {  get; set; } = string.Empty;
     }
 }

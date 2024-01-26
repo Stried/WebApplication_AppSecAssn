@@ -1,22 +1,29 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApplication3.ViewModels;
 
 namespace WebApplication3.Pages
 {
     [Authorize]
     public class AccountModel : PageModel
     {
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public AccountModel(IHttpContextAccessor contextAccessor)
+        public AccountModel(SignInManager<User> signInManager, UserManager<User> userManager, IHttpContextAccessor context)
         {
-            _contextAccessor = contextAccessor;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _contextAccessor = context;
         }
 
-        public void OnGet()
+        public async void OnGet()
         {
+            
         }
 
         public void GetDetails()

@@ -1,15 +1,14 @@
 Assignment Project:
 Registration Form (4%) (COMPLETED)
 
-Set Strong Password (10%)
-- Implement both Client-based and Server-based checks.
+Set Strong Password (10%) (COMPLETED)
 
 Securing User Data and Passwords (6%) (COMPLETED)
 
 Session Management (10%)
 - Create a Secured Session upon successful login (Done)
-- Perform session timeout
-- Route to homepage/login page after session timeout.
+- Perform session timeout (Done)
+- Route to homepage/login page after session timeout. (Done)
 - Detect multiple logins from different devices
 
 Credential Verfication (10%) (COMPLETED)
@@ -20,8 +19,8 @@ Anti-bot (5%)
 Proper Input Validation  (15%)
 - Prevent injection, CSRF and XSS attack
 - Perform proper input sanitation, validation and verification
-- Client and server input validation
-- Display error or warning message on improper input requirements
+- Client and server input validation (Done)
+- Display error or warning message on improper input requirements (Done)
 - Perform proper encoding before saving into database. (Done)
 
 Proper Error Handling (5%)

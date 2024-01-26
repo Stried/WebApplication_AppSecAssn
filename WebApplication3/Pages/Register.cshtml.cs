@@ -7,6 +7,7 @@ using WebApplication3.Model;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.DataProtection;
+using System.Web;
 
 namespace WebApplication3.Pages
 {
@@ -83,7 +84,7 @@ namespace WebApplication3.Pages
                     DeliveryAddress = RModel.DeliveryAddress,
                     Email = RModel.Email,
                     PhotoString = photoBytes,
-                    AboutMe = RModel.AboutMe,
+                    AboutMe = HttpUtility.HtmlEncode(RModel.AboutMe),
                     Password = finalHash,
                     SaltyBites = salt,
 

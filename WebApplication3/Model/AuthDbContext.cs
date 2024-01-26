@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using WebApplication3.ViewModels;
 
 namespace WebApplication3.Model
 {
@@ -25,6 +26,8 @@ namespace WebApplication3.Model
             string connectionString = _configuration.GetConnectionString("AuthConnectionString");
             optionsBuilder.UseSqlServer(connectionString);
         }
+
+        public DbSet<AuditLog> AuditLog { get; set; }
     }
 
 

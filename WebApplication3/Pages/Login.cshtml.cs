@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Cryptography;
 using System.Text;
+using WebApplication3.Model;
 using WebApplication3.ViewModels;
 
 namespace WebApplication3.Pages
@@ -18,15 +19,17 @@ namespace WebApplication3.Pages
 		private readonly UserManager<User> _userManager;
         private readonly IConfiguration _config;
 		private readonly IHttpContextAccessor _contextAccessor;
+        private readonly AuthDbContext _authDbContext;
         private byte[] Key;
         private byte[] IV;
 
-        public LoginModel(SignInManager<User> signInManager,  IConfiguration configuration, IHttpContextAccessor contextAccessor, UserManager<User> userManager)
+        public LoginModel(SignInManager<User> signInManager, IConfiguration configuration, IHttpContextAccessor contextAccessor, UserManager<User> userManager, AuthDbContext authDbContext)
         {
             _signInManager = signInManager;
             _config = configuration;
             _contextAccessor = contextAccessor;
             _userManager = userManager;
+            _authDbContext = authDbContext;
         }
 
         public void OnGet()
@@ -42,7 +45,15 @@ namespace WebApplication3.Pages
 				var identityResult = await _signInManager.PasswordSignInAsync(LModel.Email, LModel.Password, LModel.RememberMe, true);
 				if (identityResult.Succeeded)
 				{
-                    var userEmail = LModel.Email;
+                    AuditLog newLog = new()
+                    {
+                        UserEmail = LModel.Email,
+                        Action = "Login"
+                    };
+
+                    _authDbContext.AuditLog.Add(newLog);
+                    _authDbContext.SaveChanges();
+
                     var userDetails = await _userManager.FindByNameAsync(LModel.Email);
                     _contextAccessor.HttpContext.Session.SetString("FullName", userDetails.FullName);
                     _contextAccessor.HttpContext.Session.SetString("CreditCardNo", userDetails.CreditCardNo.ToString());
@@ -58,7 +69,16 @@ namespace WebApplication3.Pages
 					
 				if (identityResult.IsLockedOut)
 				{
-					ModelState.AddModelError("", "Account is Locked Out. Please Try Again Later!");
+                    AuditLog newLog = new()
+                    {
+                        UserEmail = LModel.Email,
+                        Action = "LoginFail",
+                        CreatedDate = DateTime.Now,
+                    };
+
+                    _authDbContext.AuditLog.Add(newLog);
+                    _authDbContext.SaveChanges();
+                    ModelState.AddModelError("", "Account is Locked Out. Please Try Again Later!");
 				}
 					
 			

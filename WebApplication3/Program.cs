@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApplication3.Model;
@@ -26,21 +27,15 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 	options.Lockout.MaxFailedAccessAttempts = 3;
 }).AddEntityFrameworkStores<AuthDbContext>();
 
-builder.Services.Configure<IdentityOptions>(options =>
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddDistributedMemoryCache(); //save session in memory
+builder.Services.AddSession(options =>
 {
-    // Password Settings
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequiredLength = 12;
-    options.Password.RequiredUniqueChars = 1;
-
-    // Account Lockout
-    options.Lockout.AllowedForNewUsers = true;
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
-    options.Lockout.MaxFailedAccessAttempts = 3;
+	options.IdleTimeout = TimeSpan.FromSeconds(30);
 });
+builder.Services.AddDataProtection().SetApplicationName("WebApplication3");
+builder.Services.AddDataProtection().SetDefaultKeyLifetime(TimeSpan.FromDays(14));
+builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(@"c:\temp-keys\"));
 
 builder.Services.ConfigureApplicationCookie(Config =>
 {
@@ -59,6 +54,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseSession();
 
 app.UseRouting();
 

@@ -1,0 +1,47 @@
+﻿@page
+@model WebApplication3.Pages.AccountModel
+@{
+    ViewData["Title"] = "Account";
+    var userDetails = await UserManager.GetUserAsync(User);
+
+    var dataProtectionProvider = DataProtectionProvider.Create("EncryptData");
+    var protector = dataProtectionProvider.CreateProtector("MySecretKey");
+
+    var sessionItem = context.HttpContext.Session;
+
+    var creditCardNo = context.HttpContext.Session.GetString("CreditCardNo");
+    var credCardDetails = protector.Unprotect(creditCardNo);
+}
+
+@using Microsoft.AspNetCore.Identity
+@using WebApplication3.ViewModels
+@using Microsoft.AspNetCore.DataProtection;
+@inject SignInManager<User> SignInManager;
+@inject UserManager<User> UserManager;
+@inject IHttpContextAccessor context;
+
+<div class="text-center">
+    <h1>Account Details</h1>
+    
+    <h2>Full Name</h2>
+    <p>@sessionItem.GetString("FullName")</p>
+
+    <h2>Full Name</h2>
+    <p>@sessionItem.GetString("AboutMe")</p>
+
+    <h2>Email</h2>
+    <p>@sessionItem.GetString("Email")</p>
+
+    <h2>Phone Number</h2>
+    <p>@sessionItem.GetInt32("PhoneNumber")</p>
+
+    <h2>Gender</h2>
+    <p>@sessionItem.GetString("Gender")</p>
+
+    <h2>Delivery Address</h2>
+    <p>@sessionItem.GetString("DeliveryAddress")</p>
+
+    <h2>Credit Card Info</h2>
+    <p>@credCardDetails</p>
+
+</div>

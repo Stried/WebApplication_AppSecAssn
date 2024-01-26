@@ -1,18 +1,10 @@
 Assignment Project:
-Registration Form (4%)
-- Sucessfully saving member info into Database (Done)
-- Check for duplicate email and rectify issue (Done)
+Registration Form (4%) (COMPLETED)
 
-Securing Credentials
 Set Strong Password (10%)
-- Perform password complexity checks (Min 12 chars, use combination of lower/upper case, numbers and special characters) (Done)
-- Offer feedback to user on strong password (Done)
 - Implement both Client-based and Server-based checks.
 
-Securing User Data and Passwords (6%)
-- Implement Password Protection (Done)
-- Encryption of customer data (Encrypt in database)
-- Decryption of customer data (Display in homepage)
+Securing User Data and Passwords (6%) (COMPLETED)
 
 Session Management (10%)
 - Create a Secured Session upon successful login (Done)
@@ -25,7 +17,7 @@ Credential Verfication (10%)
 - Rate limiting (Account lockout after 3 login failures) (Done)
 - Perform proper and safe logout (Clear session and redirect to login page) (Done)
 - Perform audit log (save user activities in database)
-- Redirect to homepage after credential verification. Home page displays the user info including encrypted data (Half-Done, no encrypted data)
+- Redirect to homepage after credential verification. Home page displays the user info including encrypted data (Done)
 
 Anti-bot (5%)
 - IMplement Google reCaptcha v3 service

@@ -15,14 +15,18 @@ namespace WebApplication3.Pages
         public Login LModel { get; set; }
 
         private readonly SignInManager<User> _signInManager;
+		private readonly UserManager<User> _userManager;
         private readonly IConfiguration _config;
+		private readonly IHttpContextAccessor _contextAccessor;
         private byte[] Key;
         private byte[] IV;
 
-        public LoginModel(SignInManager<User> signInManager, IConfiguration configuration)
+        public LoginModel(SignInManager<User> signInManager,  IConfiguration configuration, IHttpContextAccessor contextAccessor, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _config = configuration;
+            _contextAccessor = contextAccessor;
+            _userManager = userManager;
         }
 
         public void OnGet()
@@ -38,7 +42,18 @@ namespace WebApplication3.Pages
 				var identityResult = await _signInManager.PasswordSignInAsync(LModel.Email, LModel.Password, LModel.RememberMe, true);
 				if (identityResult.Succeeded)
 				{
-					return RedirectToPage("Index");
+                    var userEmail = LModel.Email;
+                    var userDetails = await _userManager.FindByNameAsync(LModel.Email);
+                    _contextAccessor.HttpContext.Session.SetString("FullName", userDetails.FullName);
+                    _contextAccessor.HttpContext.Session.SetString("CreditCardNo", userDetails.CreditCardNo.ToString());
+					_contextAccessor.HttpContext.Session.SetString("Gender", userDetails.Gender);
+                    _contextAccessor.HttpContext.Session.SetInt32("PhoneNumber", userDetails.PhoneNumber);
+                    _contextAccessor.HttpContext.Session.SetString("DeliveryAddress", userDetails.DeliveryAddress);
+                    _contextAccessor.HttpContext.Session.SetString("Email", userDetails.Email);
+                    _contextAccessor.HttpContext.Session.SetString("PhotoString", userDetails.PhotoString.ToString());
+                    _contextAccessor.HttpContext.Session.SetString("AboutMe", userDetails.AboutMe);
+
+                    return RedirectToPage("Index");
 				}
 					
 				if (identityResult.IsLockedOut)

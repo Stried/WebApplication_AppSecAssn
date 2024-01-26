@@ -8,7 +8,7 @@ namespace WebApplication3.ViewModels
 
         public string FullName { get; set; } = string.Empty;
 
-        public long CreditCardNo { get; set; }
+        public string CreditCardNo { get; set; }
 
         public string Gender { get; set; } = string.Empty;
 

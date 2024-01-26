@@ -6,6 +6,7 @@ using NanoidDotNet;
 using WebApplication3.Model;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace WebApplication3.Pages
 {
@@ -45,6 +46,9 @@ namespace WebApplication3.Pages
         {
             if (ModelState.IsValid)
             {
+                var dataProtectionProvider = DataProtectionProvider.Create("EncryptData");
+                var protector = dataProtectionProvider.CreateProtector("MySecretKey");
+
                 // https://learn.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-7.0
                 byte[] photoBytes = null;
                 byte[] saltByte = new byte[8];
@@ -73,7 +77,7 @@ namespace WebApplication3.Pages
                 {
                     UserName = RModel.Email,
                     FullName = RModel.FullName,
-                    CreditCardNo = RModel.CreditCardNo,
+                    CreditCardNo = protector.Protect(RModel.CreditCardNo),
                     Gender = RModel.Gender,
                     PhoneNumber = RModel.PhoneNumber,
                     DeliveryAddress = RModel.DeliveryAddress,

@@ -10,7 +10,7 @@ namespace WebApplication3.ViewModels
         public string FullName { get; set; } = string.Empty;
 
         [Required]
-        public long CreditCardNo { get; set; }
+        public string CreditCardNo { get; set; }
 
         [Required]
         public string Gender { get; set; } = string.Empty;

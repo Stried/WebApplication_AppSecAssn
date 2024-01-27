@@ -21,16 +21,7 @@ namespace WebApplication3.Pages
 
         public async void OnGet()
         {
-            var sessionItem = _contextAccessor.HttpContext.Session;
-
-            var user = await _userManager.FindByEmailAsync(sessionItem.GetString("Email"));
-            var sessSecurityStamp = sessionItem.GetString("SecurityStamp");
-            if (sessSecurityStamp != null || sessSecurityStamp != user.SecurityStamp)
-            {
-                await _signInManager.SignOutAsync();
-                sessionItem.Clear();
-                RedirectToPage("/Login");
-            }
+            
         }
 
         public async Task<IActionResult> OnPostLogoutAsync()

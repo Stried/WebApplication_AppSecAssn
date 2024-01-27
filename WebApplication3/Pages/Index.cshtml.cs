@@ -24,5 +24,22 @@ namespace WebApplication3.Pages
         {
             
         }
+
+        public async Task Load()
+        {
+            if (_contextAccessor.HttpContext.Session.IsAvailable)
+            {
+                var sessionItem = _contextAccessor.HttpContext.Session;
+
+                var user = await _userManager.FindByEmailAsync(sessionItem.GetString("Email"));
+                var sessSecurityStamp = sessionItem.GetString("SecurityStamp");
+                if (sessSecurityStamp != null || sessSecurityStamp != user.SecurityStamp)
+                {
+                    await _signInManager.SignOutAsync();
+                    sessionItem.Clear();
+                    RedirectToPage("/Login");
+                }
+            }
+        }
     }
 }

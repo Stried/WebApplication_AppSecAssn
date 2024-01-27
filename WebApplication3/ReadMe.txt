@@ -5,11 +5,7 @@ Set Strong Password (10%) (COMPLETED)
 
 Securing User Data and Passwords (6%) (COMPLETED)
 
-Session Management (10%)
-- Create a Secured Session upon successful login (Done)
-- Perform session timeout (Done)
-- Route to homepage/login page after session timeout. (Done)
-- Detect multiple logins from different devices
+Session Management (10%) (Completed)
 
 Credential Verfication (10%) (COMPLETED)
 

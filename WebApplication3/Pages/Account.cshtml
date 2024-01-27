@@ -10,22 +10,33 @@
     var sessionItem = context.HttpContext.Session;
     var credCardDetails = "";
     var aboutMe = "";
-    var creditCardNo = context.HttpContext.Session.GetString("CreditCardNo");
+    var sessSecurityStamp = "";
 
-    if (creditCardNo != null)
+    // Checks if session Security Stamp matches, if not logout and clear session
+    if (context.HttpContext.Features.Get<ISessionFeature>()?.Session != null)
     {
-        credCardDetails = protector.Unprotect(creditCardNo);
+        sessSecurityStamp = sessionItem.GetString("SecurityStamp");
+        if (sessSecurityStamp != userDetails.SecurityStamp)
+        {
+            await SignInManager.SignOutAsync();
+            sessionItem.Clear();
+            RedirectToPage("/Login");
+        }
 
-    https://learn.microsoft.com/en-us/dotnet/api/system.web.httputility.htmlencode?view=net-8.0
-        StringWriter myWriter = new StringWriter();
-        aboutMe = HttpUtility.HtmlDecode(sessionItem.GetString("AboutMe"));
-    } 
-    else
-    {
-        await SignInManager.SignOutAsync();
-        sessionItem.Clear();
-        ReturnToLogin();
+        var creditCardNo = sessionItem.GetString("CreditCardNo");
+        if (creditCardNo != null)
+        {
+            credCardDetails = protector.Unprotect(creditCardNo);
+
+        https://learn.microsoft.com/en-us/dotnet/api/system.web.httputility.htmlencode?view=net-8.0
+            StringWriter myWriter = new StringWriter();
+            aboutMe = HttpUtility.HtmlDecode(sessionItem.GetString("AboutMe"));
+        }
+
     }
+
+
+    
 
     IActionResult ReturnToLogin()
     {
@@ -36,6 +47,7 @@
 @using Microsoft.AspNetCore.Identity
 @using WebApplication3.ViewModels
 @using Microsoft.AspNetCore.DataProtection;
+@using Microsoft.AspNetCore.Http.Features;
 @using System.Web;
 @inject SignInManager<User> SignInManager;
 @inject UserManager<User> UserManager;
@@ -43,7 +55,7 @@
 
 <div class="text-center">
     <h1>Account Details</h1>
-    
+    <p>@sessSecurityStamp</p>
     <h2>Full Name</h2>
     <p>@sessionItem.GetString("FullName")</p>
 

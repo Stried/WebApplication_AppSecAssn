@@ -2,7 +2,32 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+
+    // Checks if session Security Stamp matches, if not logout and clear session
+    var userDetails = await UserManager.GetUserAsync(User);
+    var sessionItem = context.HttpContext.Session;
+    var sessSecurityStamp = "";
+    if (context.HttpContext.Features.Get<ISessionFeature>()?.Session != null)
+    {
+        sessSecurityStamp = sessionItem.GetString("SecurityStamp");
+        if (sessSecurityStamp != userDetails.SecurityStamp)
+        {
+            await SignInManager.SignOutAsync();
+            sessionItem.Clear();
+            RedirectToPage("/Login");
+        }
+
+    }
 }
+@using Microsoft.AspNetCore.Identity
+@using WebApplication3.ViewModels
+@using Microsoft.AspNetCore.DataProtection;
+@using Microsoft.AspNetCore.Http.Features;
+@using System.Web;
+@inject SignInManager<User> SignInManager;
+@inject UserManager<User> UserManager;
+@inject IHttpContextAccessor context;
+
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>

@@ -18,7 +18,21 @@
         } else {
             errorLine.innerText = "";
         }
-    }
+    
+
+        function validateAddress() {
+            var inputStr = document.getElementById("RModel.FullName").value;
+            var errorLine = document.getElementById("fullNameError");
+            errorLine.style.color = "red";
+
+            if (inputStr.trim().length == 0) {
+                errorLine.innerText = "Full name cannot be empty";
+            } else if (!(/^[a-zA-Z ]+$/.test(inputStr))) {
+                errorLine.innerText = "Full name cannot contain special characters";
+            } else {
+                errorLine.innerText = "";
+            }
+        }
 
     function validateCreditCard() {
         var inputStr = document.getElementById("RModel.CreditCardNo").value;
@@ -119,7 +133,7 @@
 					<label class="form-label" asp-for="RModel.FullName" for="fullName">
 						Full Name
 					</label>
-                    <input type="text" asp-for="RModel.FullName" class="form-control" name="RModel.FullName" id="RModel.FullName" onkeyup="validateFullName()">
+                    <input type="text" asp-for="RModel.FullName" class="form-control" name="RModel.FullName" id="RModel.FullName" onkeyup="javascript:validateFullName()">
 					<p id="fullNameError"></p>
 				</div>
 
@@ -127,7 +141,7 @@
                     <label asp-for="RModel.CreditCardNo" for="creditCardNo">
                         Credit Card Number
                     </label>
-                    <input type="number" asp-for="RModel.CreditCardNo" class="form-control" name="RModel.CreditCardNo" id="RModel.CreditCardNo" onkeyup="validateCreditCard()">
+                    <input type="number" asp-for="RModel.CreditCardNo" class="form-control" name="RModel.CreditCardNo" id="RModel.CreditCardNo" onkeyup="javascript:validateCreditCard()">
                     <p id="creditCardError"></p>
                 </div>
 
@@ -135,7 +149,7 @@
                     <label asp-for="RModel.DeliveryAddress" for="deliveryAddress">
                         Delivery Address
                     </label>
-                    <input type="text" asp-for="RModel.DeliveryAddress" class="form-control" name="RModel.DeliveryAddress" id="RModel.DeliveryAddress">
+                    <input type="text" asp-for="RModel.DeliveryAddress" class="form-control" name="RModel.DeliveryAddress" id="RModel.DeliveryAddress" onkeyup="javascript:validateAddress()">
                     <p id="deliveryAddressError"></p>
                 </div>
 
@@ -152,7 +166,7 @@
                     <label asp-for="RModel.Email" for="emailAddress">
                         Email Address
                     </label>
-                    <input type="email" asp-for="RModel.Email" class="form-control" name="RModel.Email" id="RModel.Email" onkeyup="validateEmailAddress()">
+                    <input type="email" asp-for="RModel.Email" class="form-control" name="RModel.Email" id="RModel.Email" onkeyup="javascript:validateEmailAddress()">
                     <p id="emailError"></p>
                 </div>
 
@@ -160,7 +174,7 @@
                     <label asp-for="RModel.PhoneNumber" for="phoneNo">
                         Phone Number
                     </label>
-                    <input type="number" asp-for="RModel.PhoneNumber" class="form-control" name="RModel.PhoneNo" id="RModel.PhoneNo" onkeyup="validatePhoneNo()">
+                    <input type="number" asp-for="RModel.PhoneNumber" class="form-control" name="RModel.PhoneNo" id="RModel.PhoneNo" onkeyup="javascript:validatePhoneNo()">
                     <p id="phoneNoError"></p>
                 </div>
 
@@ -188,7 +202,7 @@
 
 				<div class="mb-3">
 					<label class="form-label" asp-for="RModel.ConfirmPassword">Confirm Password</label>
-					<input type="Text" asp-for="RModel.ConfirmPassword" class="form-control" id="RModel.ConfirmPassword" onkeyup="checkPassword()" />
+                    <input type="Text" asp-for="RModel.ConfirmPassword" class="form-control" id="RModel.ConfirmPassword" onkeyup="javascript:checkPassword()" />
 					<span id="cnfmPasswordError" asp-validaton-for="RModel.ConfirmPassword" class="text-danger"></span>
 				</div>
 

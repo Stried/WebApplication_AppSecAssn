@@ -7,10 +7,15 @@ namespace WebApplication3.Model
     public class SecurityStampMiddleware
     {
         private readonly RequestDelegate _requestDelegate;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public SecurityStampMiddleware(RequestDelegate requestDelegate)
+        public SecurityStampMiddleware(RequestDelegate requestDelegate, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _requestDelegate = requestDelegate;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task Invoke(HttpContext context, UserManager<User> userManager, SignInManager<User> signInManager)
@@ -18,11 +23,14 @@ namespace WebApplication3.Model
             if (context.User.Identity.IsAuthenticated)
             {
                 var user = await userManager.GetUserAsync(context.User);
-                if (user.SecurityStamp != context.User.FindFirstValue("AspNet.Identity.SecurityStamp")) 
+
+                var sessionItem = _contextAccessor.HttpContext.Session;
+                var sessSecurityStamp = sessionItem.GetString("SecurityStamp");
+                if (sessSecurityStamp != null || sessSecurityStamp != user.SecurityStamp)
                 {
-                    await signInManager.SignOutAsync();
+                    await _signInManager.SignOutAsync();
+                    sessionItem.Clear();
                     context.Response.Redirect("/Login");
-                    return;
                 }
             }
 

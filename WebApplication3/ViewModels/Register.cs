@@ -16,7 +16,7 @@ namespace WebApplication3.ViewModels
         public string Gender { get; set; } = string.Empty;
 
         [Required]
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
         [Required]
         public string DeliveryAddress { get; set; } = string.Empty;

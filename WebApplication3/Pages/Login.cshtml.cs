@@ -62,7 +62,7 @@ namespace WebApplication3.Pages
                     _contextAccessor.HttpContext.Session.SetString("FullName", userDetails.FullName);
                     _contextAccessor.HttpContext.Session.SetString("CreditCardNo", userDetails.CreditCardNo.ToString());
 					_contextAccessor.HttpContext.Session.SetString("Gender", userDetails.Gender);
-                    _contextAccessor.HttpContext.Session.SetInt32("PhoneNumber", userDetails.PhoneNumber);
+                    _contextAccessor.HttpContext.Session.SetString("PhoneNumber", userDetails.PhoneNumber);
                     _contextAccessor.HttpContext.Session.SetString("DeliveryAddress", userDetails.DeliveryAddress);
                     _contextAccessor.HttpContext.Session.SetString("Email", userDetails.Email);
                     _contextAccessor.HttpContext.Session.SetString("PhotoString", userDetails.PhotoString.ToString());

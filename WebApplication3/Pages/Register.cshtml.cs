@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.DataProtection;
 using System.Web;
+using System.Text.RegularExpressions;
 
 namespace WebApplication3.Pages
 {
@@ -72,6 +73,66 @@ namespace WebApplication3.Pages
                     await RModel.PhotoString.CopyToAsync(photoStream);
                     photoBytes = photoStream.ToArray();
                     // Check if i need to use Nanoid to store images
+                }
+
+                // Backend Check - Full Name
+                string regexPatternFullName = "^[a-zA-Z ]+$";
+                Regex regexFullName = new Regex(regexPatternFullName);
+                if (RModel.FullName.Trim().Length == 0)
+                {
+                    ModelState.AddModelError("", "Full Name cannot be empty");
+                }
+                else if (RModel.FullName.Trim().Length < 8)
+                {
+                    ModelState.AddModelError("", "Full Name cannot be less than 8 Characters");
+                }
+                else if (!(regexFullName.Match(RModel.FullName).Success))
+                {
+                    ModelState.AddModelError("", "Full Name cannot contain special characters");
+                }
+
+                // Backend Check - Credit Card
+                string regexPatternCreditCard = "^[0-9]+$";
+                Regex regexCredCard = new Regex(regexPatternCreditCard);
+                if (RModel.CreditCardNo.Length == 0)
+                {
+                    ModelState.AddModelError("", "Credit Card Number cannot be empty");
+                }
+                else if (RModel.CreditCardNo.Length != 16)
+                {
+                    ModelState.AddModelError("", "Credit Card Number must be 16 digits long.")
+                }
+                else if (!(regexCredCard.Match(RModel.CreditCardNo).Success))
+                {
+                    ModelState.AddModelError("", "Credit Card Number can only contain numbers.");
+                }
+
+                // Backend Check - Gender
+                string regexPatternGender = "^[a-zA-Z]+$";
+                Regex regexGender = new Regex(regexPatternGender);
+                if (RModel.Gender.Length == 0)
+                {
+                    ModelState.AddModelError("", "Gender cannot be empty");
+                }
+                else if (RModel.Gender != "Male" || RModel.Gender != "Female")
+                {
+                    ModelState.AddModelError("", "Gender can only be 'Male' or 'Female'.");
+                }
+                else if (!(regexGender.Match(RModel.Gender).Success)) 
+                {
+                    ModelState.AddModelError("", "Gender cannot contain special characters.");
+                }
+
+                // Backend Check - Delivery Address
+                string regexPatternDeliveryAddress = "^[a-zA-Z0-9 ]+$";
+                Regex regexDeliveryAddress = new Regex(regexPatternDeliveryAddress);
+                if (RModel.DeliveryAddress.Length == 0)
+                {
+                    ModelState.AddModelError("", "Delivery Address cannot be empty");
+                }
+                else if (!(regexDeliveryAddress.Match(RModel.DeliveryAddress).Success))
+                {
+                    ModelState.AddModelError("", "Delivery Address can only contain alphanumerical characters.");
                 }
 
                 var user = new User()

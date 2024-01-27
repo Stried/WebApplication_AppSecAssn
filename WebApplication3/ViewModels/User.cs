@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication3.ViewModels
 {
@@ -10,9 +11,11 @@ namespace WebApplication3.ViewModels
 
         public string CreditCardNo { get; set; }
 
+        // Ensures only male or female is entered
+        [EnumDataType(typeof(GenderEnum))]
         public string Gender { get; set; } = string.Empty;
 
-        public int PhoneNumber {  get; set; }
+        public string PhoneNumber {  get; set; }
 
         public string DeliveryAddress { get; set; } = string.Empty;
 
@@ -27,5 +30,11 @@ namespace WebApplication3.ViewModels
         public string SecurityStamp {  get; set; } = string.Empty;
 
         public string SaltyBites {  get; set; } = string.Empty;
+    }
+
+    public enum GenderEnum
+    {
+        Male,
+        Female
     }
 }

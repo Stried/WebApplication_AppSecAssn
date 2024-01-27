@@ -18,21 +18,21 @@
         } else {
             errorLine.innerText = "";
         }
-    
+    }
 
-        function validateAddress() {
-            var inputStr = document.getElementById("RModel.FullName").value;
-            var errorLine = document.getElementById("fullNameError");
-            errorLine.style.color = "red";
+    function validateAddress() {
+        var inputStr = document.getElementById("RModel.DeliveryAddress").value;
+        var errorLine = document.getElementById("deliveryAddressError");
+        errorLine.style.color = "red";
 
-            if (inputStr.trim().length == 0) {
-                errorLine.innerText = "Full name cannot be empty";
-            } else if (!(/^[a-zA-Z ]+$/.test(inputStr))) {
-                errorLine.innerText = "Full name cannot contain special characters";
-            } else {
-                errorLine.innerText = "";
-            }
+        if (inputStr.trim().length == 0) {
+            errorLine.innerText = "Full name cannot be empty";
+        } else if (!(/^[a-zA-Z0-9 ]+$/.test(inputStr))) {
+            errorLine.innerText = "Full name cannot contain special characters";
+        } else {
+            errorLine.innerText = "";
         }
+    }
 
     function validateCreditCard() {
         var inputStr = document.getElementById("RModel.CreditCardNo").value;
@@ -51,7 +51,7 @@
     }
 
     function validateEmailAddress() {
-        var inputStr = document.getElementById("RModel.EmailAddress").value;
+        var inputStr = document.getElementById("RModel.Email").value;
         var errorLine = document.getElementById("emailError");
         errorLine.style.color = "red";
 
@@ -64,15 +64,31 @@
         }
     }
 
+    function validateGender() {
+        var inputStr = document.getElementById("RModel.Gender").value;
+        var errorLine = document.getElementById("genderError");
+        errorLine.style.color = "red"
+
+        if (inputStr.length == 0) {
+            errorLine.innerText = "Gender cannot be empty"
+        } else if (inputStr != "Male" || inputStr != "Female") {
+            errorLine.innerText = "Gender can only be Male or Female"
+        } else if (!(/^[a-zA-Z ]+$/.test(inputStr))) {
+            errorLine.innerText = "Full name cannot contain special characters";
+        } else {
+            errorLine.innerText = ""
+        }
+    }
+
     function validatePhoneNo() {
-        var inputStr = document.getElementById("RModle.PhoneNo").value;
+        var inputStr = document.getElementById("RModel.PhoneNumber").value;
         var errorLine = document.getElementById("phoneNoError");
         errorLine.style.color = "red";
 
         if (inputStr.length == 0) {
             errorLine.innerText = "Phone Number cannot be empty"
-        } else if (inputStr.length < 12) {
-            errorLine.innerText = "Phone Number must be 12 digits long"
+        } else if (inputStr.length < 8) {
+            errorLine.innerText = "Phone Number must be 8 digits long"
         } else if (!(/^[0-9]+$/.test(inputStr))) {
             errorLine.innerText = "Phone Number can only contain numbers"
         } else {
@@ -87,10 +103,10 @@
 
         if (inputStr.length == 0) {
             errorLine.innerText = "Password cannot be empty"
-        } else if (inputStr.length < 8) {
-            errorLine.innerText = "Password length cannot be less than 8"
+        } else if (inputStr.length < 12) {
+            errorLine.innerText = "Password length cannot be less than 12"
             console.log("An Error has occured")
-        } else if (!(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@@$!%*#?&])[A-Za-z\d@@$!%*#?&]{8,}$/).test(inputStr)) {
+        } else if (!(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@@$!%*#?&.])[A-Za-z\d@@$!%*#?&.]{8,}$/).test(inputStr)) {
             errorLine.innerText = "Password must contain at least one letter, one number and one special character"
         } else {
             errorLine.innerText = ""
@@ -101,7 +117,7 @@
         var inputStr = document.getElementById("RModel.ConfirmPassword").value;
         var errorLine = document.getElementById("cnfmPasswordError");
 
-        var passwordCheck = document.getElementById("password").value;
+        var passwordCheck = document.getElementById("RModel.Password").value;
 
         if (inputStr != passwordCheck) {
             errorLine.innerText = "Passwords do not match"
@@ -157,7 +173,7 @@
                     <label asp-for="RModel.Gender" for="">
                         Gender
                     </label>
-                    <input type="text" asp-for="RModel.Gender" name="RModel.Gender" id="RModel.Gender">
+                    <input type="text" asp-for="RModel.Gender" class="form-control" name="RModel.Gender" id="RModel.Gender" onkeyup="javascript:validateGender()">
 
                     <p id="genderError"></p>
                 </div>
@@ -174,7 +190,7 @@
                     <label asp-for="RModel.PhoneNumber" for="phoneNo">
                         Phone Number
                     </label>
-                    <input type="number" asp-for="RModel.PhoneNumber" class="form-control" name="RModel.PhoneNo" id="RModel.PhoneNo" onkeyup="javascript:validatePhoneNo()">
+                    <input type="number" asp-for="RModel.PhoneNumber" class="form-control" name="RModel.PhoneNumber" id="RModel.PhoneNumber" onkeyup="javascript:validatePhoneNo()">
                     <p id="phoneNoError"></p>
                 </div>
 

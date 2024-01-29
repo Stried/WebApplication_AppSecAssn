@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApplication3.Model;
+using WebApplication3.Pages;
 using WebApplication3.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,8 @@ builder.Services.ConfigureApplicationCookie(Config =>
 	Config.AccessDeniedPath = "/Index";
 });
 
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -60,6 +63,21 @@ app.UseStaticFiles();
 app.UseSession();
 
 app.UseRouting();
+app.UseStatusCodePages(async context =>
+{
+	if (context.HttpContext.Response.StatusCode == 404)
+	{
+		context.HttpContext.Response.Redirect("/404");
+	}
+	else if (context.HttpContext.Response.StatusCode == 403)
+	{
+		context.HttpContext.Response.Redirect("/403");
+	}
+	else if (context.HttpContext.Response.StatusCode == 401)
+	{
+		context.HttpContext.Response.Redirect("/401");
+	}
+});
 
 app.UseAuthentication();
 

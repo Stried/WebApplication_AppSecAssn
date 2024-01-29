@@ -1,0 +1,28 @@
+﻿@page
+@model WebApplication3.Pages.LoginWithMFAModel
+@{
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-sm-12 col-md-12 col-lg-4">
+            <h1 class="mb-3">Two-Factor Authentication Verification</h1>
+
+            <form method="post">
+                <div asp-validation-summary="All"></div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="InputCode">Verification Code</label>
+                    <input type="text" asp-for="InputCode" class="form-control" />
+                    <span asp-validation-for="InputCode" class="text-danger"></span>
+                </div>
+
+                <input type="hidden" asp-for="Email" value="Alanangkh@gmail.com" />
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Verify</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

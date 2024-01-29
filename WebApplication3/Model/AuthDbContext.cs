@@ -28,6 +28,7 @@ namespace WebApplication3.Model
         }
 
         public DbSet<AuditLog> AuditLog { get; set; }
+        public DbSet<OldPasswordHash> OldPasswordHashes { get; set; }
     }
 
 

@@ -5,29 +5,21 @@ Set Strong Password (10%) (COMPLETED)
 
 Securing User Data and Passwords (6%) (COMPLETED)
 
-Session Management (10%) (Completed)
+Session Management (10%) (COMPLETED)
 
 Credential Verfication (10%) (COMPLETED)
 
-Anti-bot (5%)
-- IMplement Google reCaptcha v3 service
+Anti-bot (5%) (COMPLETED)
 
-Proper Input Validation  (15%)
-- Prevent injection, CSRF and XSS attack
-- Perform proper input sanitation, validation and verification
-- Client and server input validation (Done)
-- Display error or warning message on improper input requirements (Done)
-- Perform proper encoding before saving into database. (Done)
+Proper Input Validation  (15%) (COMPLETED)
 
-Proper Error Handling (5%)
-- Graceful error handling on all pages (including 404, 403)
-- Display proper customed error pages
+Proper Error Handling (5%) (COMPLETED)
 
 Advanced Features
 - Automatic account recovery after x mins of lockout (Done)
-- Avoid password reuse (max 2)
-- Change password
-- Reset Password using Email/SMS
+- Avoid password reuse (max 2) (Done)
+- Change password (Done)
+- Reset Password using Email/SMS (Done)
 - Minimum and Maximum password age
-- 2FA
+- 2FA (Done)
 

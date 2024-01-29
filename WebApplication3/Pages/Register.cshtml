@@ -3,6 +3,7 @@
 @{
 }
 
+<script src="https://google.com/recaptcha/api.js?render=6Lc17V0pAAAAACppEA7nOCdeqA6Ov4TqrqrODOxC"></script>
 <script type="text/javascript">
     function validateFullName() {
         var inputStr = document.getElementById("RModel.FullName").value;
@@ -126,7 +127,15 @@
         }
     }
 
+    grecaptcha.ready(function () {
+        grecaptcha.execute("6Lc17V0pAAAAACppEA7nOCdeqA6Ov4TqrqrODOxC", { action: "validate_captcha" })
+            .then(function (token) {
+                document.getElementById("g-recaptcha-response").value = token;
+            });
+    });
+
 </script>
+
 
 <style>
     .formFieldItem {
@@ -222,7 +231,7 @@
 					<span id="cnfmPasswordError" asp-validaton-for="RModel.ConfirmPassword" class="text-danger"></span>
 				</div>
 
-				<div class="mb-3">
+                <div class="g-recaptcha" data-sitekey="6Lc17V0pAAAAACppEA7nOCdeqA6Ov4TqrqrODOxC" data-callback="onSubmit" data-action="submit">
 					<button type="submit" class="btn btn-primary">Register</button>
 				</div>
 			</form>

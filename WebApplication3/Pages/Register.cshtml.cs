@@ -9,6 +9,9 @@ using System.Text;
 using Microsoft.AspNetCore.DataProtection;
 using System.Web;
 using System.Text.RegularExpressions;
+using System.Text.Json.Nodes;
+using System.Net;
+using System.Text.Json;
 
 namespace WebApplication3.Pages
 {
@@ -100,7 +103,7 @@ namespace WebApplication3.Pages
                 }
                 else if (RModel.CreditCardNo.Length != 16)
                 {
-                    ModelState.AddModelError("", "Credit Card Number must be 16 digits long.")
+                    ModelState.AddModelError("", "Credit Card Number must be 16 digits long.");
                 }
                 else if (!(regexCredCard.Match(RModel.CreditCardNo).Success))
                 {
@@ -135,6 +138,11 @@ namespace WebApplication3.Pages
                     ModelState.AddModelError("", "Delivery Address can only contain alphanumerical characters.");
                 }
 
+                if (ReCaptchaPassed() == false)
+                {
+                    ModelState.AddModelError("", "You failed the Captcha");
+                }
+
                 var user = new User()
                 {
                     UserName = RModel.Email,
@@ -151,12 +159,18 @@ namespace WebApplication3.Pages
 
                 };
                 var result = await userManager.CreateAsync(user, RModel.Password);
-                authDbContext.SaveChangesAsync();
-                logger.LogError("Result", result);
 
                 if (result.Succeeded)
                 {
                     // await signInManager.SignInAsync(user, false);
+                    OldPasswordHash oldPasswordHist = new()
+                    {
+                        OldPassword = finalHash,
+                        UserAccount = RModel.Email,
+                    };
+
+                    authDbContext.OldPasswordHashes.Add(oldPasswordHist);
+                    authDbContext.SaveChanges();
 
                     return RedirectToPage("Login");
                 }
@@ -169,7 +183,33 @@ namespace WebApplication3.Pages
         }
 
 
+        public bool ReCaptchaPassed()
+        {
+            string Response = Request.Form["g-recaptcha-response"];
+            bool Valid = false;
 
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=6Lc17V0pAAAAACppEA7nOCdeqA6Ov4TqrqrODOxC&response={Response}");
+            try
+            {
+                using (WebResponse wResponse = req.GetResponse())
+                {
+                    using (StreamReader readStream = new StreamReader(wResponse.GetResponseStream()))
+                    {
+                        string jsonResponse = readStream.ReadToEnd();
+
+                        var data = JsonSerializer.Deserialize<ReCaptchaResponse>(jsonResponse);
+
+                        Valid = data.success;
+                    }
+                }
+
+                return Valid;
+            }
+            catch (Exception ex) 
+            {
+                throw ex;
+            }
+        }
 
 
 

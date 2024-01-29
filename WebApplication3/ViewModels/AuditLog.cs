@@ -11,6 +11,6 @@ namespace WebApplication3.ViewModels
         public string Action {  get; set; }
 
         [DataType(DataType.DateTime)]
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
 }

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using WebApplication3.Model;
@@ -21,16 +23,18 @@ namespace WebApplication3.Pages
         private readonly IConfiguration _config;
 		private readonly IHttpContextAccessor _contextAccessor;
         private readonly AuthDbContext _authDbContext;
+        private readonly ILogger<LoginModel> _logger;
         private byte[] Key;
         private byte[] IV;
 
-        public LoginModel(SignInManager<User> signInManager, IConfiguration configuration, IHttpContextAccessor contextAccessor, UserManager<User> userManager, AuthDbContext authDbContext)
+        public LoginModel(SignInManager<User> signInManager, IConfiguration configuration, IHttpContextAccessor contextAccessor, UserManager<User> userManager, AuthDbContext authDbContext, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _config = configuration;
             _contextAccessor = contextAccessor;
             _userManager = userManager;
             _authDbContext = authDbContext;
+            _logger = logger;
         }
 
         public void OnGet()
@@ -41,7 +45,6 @@ namespace WebApplication3.Pages
         {
             if (ModelState.IsValid)
             {
-
 				//var identityResult = await _signInManager.PasswordSignInAsync(LModel.Email, userHash, LModel.RememberMe, false);
 				var identityResult = await _signInManager.PasswordSignInAsync(LModel.Email, LModel.Password, LModel.RememberMe, true);
 				if (identityResult.Succeeded)
@@ -56,6 +59,14 @@ namespace WebApplication3.Pages
                     _authDbContext.SaveChanges();
 
                     var userDetails = await _userManager.FindByNameAsync(LModel.Email);
+                    var is2FARequired = await _userManager.GetTwoFactorEnabledAsync(userDetails);
+                    if (is2FARequired)
+                    {
+						var mFACode = send2FAReq(LModel.Email);
+
+                        return RedirectToPage("LoginWithMFA", new { email = LModel.Email, code = mFACode });
+					}
+
                     userDetails.SecurityStamp = Guid.NewGuid().ToString();
                     await _userManager.UpdateAsync(userDetails);
 
@@ -187,5 +198,31 @@ namespace WebApplication3.Pages
             return cipherText;
 
 		}
+
+        protected string send2FAReq(string userEmail)
+        {
+            SmtpClient smtpClient = new SmtpClient();
+            smtpClient.Host = "smtp.gmail.com";
+            smtpClient.Port = 587;
+            smtpClient.EnableSsl = true; 
+            smtpClient.UseDefaultCredentials = false;
+
+            smtpClient.Credentials = new NetworkCredential("ecolife.userTest@gmail.com", "pkgasnfsumpudfik");
+
+            MailAddress mailAddress = new MailAddress("ecolife.userTest@gmail.com");
+            MailAddress to = new MailAddress(userEmail);
+            MailMessage message = new MailMessage(mailAddress, to);
+
+            int randomNumber = System.Security.Cryptography.RandomNumberGenerator.GetInt32(100000, 999999);
+            _logger.LogInformation(randomNumber.ToString());
+
+            message.Body = $"Your verification code is {randomNumber}";
+            message.Subject = "Verification Code";
+
+            string userState = "testMessage1";
+            smtpClient.Send(message);
+
+            return randomNumber.ToString();
+        }
     }
 }

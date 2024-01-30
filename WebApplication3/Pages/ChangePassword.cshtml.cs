@@ -66,7 +66,6 @@ namespace WebApplication3.Pages
                 var checkOldPassword = _authDbContext.OldPasswordHashes.Where(u => u.UserAccount == user.Email).Select(u => u.OldPassword).ToList();
                 for (int i = 0; i < checkOldPassword.Count; i++)
                 {
-                    _logger.LogInformation(checkOldPassword[i]);
                     if (checkOldPassword[i] == finalHash)
                     {
                         ModelState.AddModelError("", "Password cannot be same as last 2 passwords!");
